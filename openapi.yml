@@ -1,0 +1,35 @@
+openapi: 3.0.0
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: number
+        message:
+          type: string
+    PutDocumentRequest:
+      type: object
+      properties:
+        endpoint:
+          type: string
+    PutDocumentResponse:
+      type: object
+      properties:
+        status:
+          type: number
+        body:
+          type: object
+    GetDocumentResponse:
+      type: object
+      properties:
+        status:
+          type: number
+        body:
+          type: object
+  securitySchemes: {}
+info:
+  title: ''
+  description: ''
+  version: eef63428-aa7a-43de-8320-7de73e383fdb
+paths: {}
