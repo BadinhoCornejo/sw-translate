@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "aws-sdk": "^2.1175.0",
+    "axios": "^0.27.2",
+    "translate": "^1.4.1",
+    "uuid": "^8.3.2"
+  }
+}
