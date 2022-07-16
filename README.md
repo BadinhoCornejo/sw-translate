@@ -192,7 +192,10 @@ GET https://xxxxxxxxxx.execute-api.us-west-2.amazonaws.com/translate/{id}
 
 Where the ***{id}*** should be the one provided by the previous operation.
 
-E.g. https://xxxxxxxxxx.execute-api.us-west-2.amazonaws.com/translate/1d62d6dd-40e1-45b8-be48-2b022e7050f7
+E.g.
+```
+https://xxxxxxxxxx.execute-api.us-west-2.amazonaws.com/translate/1d62d6dd-40e1-45b8-be48-2b022e7050f7
+```
 
 The response should look like this:
 
