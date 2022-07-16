@@ -1,78 +1,128 @@
-openapi: 3.0.0
-components:
-  schemas:
-    ErrorResponse:
-      type: object
-      properties:
-        status:
-          type: number
-        message:
-          type: string
-    PutDocumentRequest:
-      type: object
-      properties:
-        endpoint:
-          type: string
-    PutDocumentResponse:
-      type: object
-      properties:
-        status:
-          type: number
-        body:
-          type: object
-    GetDocumentResponse:
-      type: object
-      properties:
-        status:
-          type: number
-        body:
-          type: object
-  securitySchemes: {}
-info:
-  title: ""
-  description: ""
-  version: da1ffad1-d650-48a9-8a24-0f2ca89d163c
-paths:
-  /translate:
-    post:
-      operationId: addTranslation
-      summary: Add translation
-      description: Creates a translation for a given endpoint
-      responses:
-        "200":
-          description: The ID of the translation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PutDocumentResponse"
-  /translate/{id}:
-    get:
-      operationId: getTranslation
-      summary: Get translation
-      description: Gets the translation of a given endpoint
-      parameters:
-        - name: id
-          in: path
-          description: The ID provided by the addTranslation endpoint
-          schema:
-            type: integer
-          required: true
-      responses:
-        "200":
-          description: Response of SW-API translated into Spanish
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GetDocumentResponse"
-        "400":
-          description: An error message when translating an endpoint
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "404":
-          description: A not found error message
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
+service: sw-translate
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: us-west-2
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+        - arn:aws:dynamodb:us-west-2:664872295309:table/SW_Translation
+
+plugins:
+  - serverless-offline
+  - serverless-openapi-documentation
+
+functions:
+  addTranslation:
+    handler: src/functions/addTranslation.translate
+    events:
+      - httpApi:
+          path: /translate
+          method: POST
+          documentation:
+            summary: Add translation
+            description: Creates a translation for a given endpoint
+            requestBody:
+              description: Endpoint (e.g. 'planets/1')
+            requestModels:
+              application/json: PutDocumentRequest
+            methodResponses:
+              - statusCode: 200
+                responseBody:
+                  description: The ID of the translation
+                responseModels:
+                  application/json: PutDocumentResponse
+  getTranslation:
+    handler: src/functions/getTranslation.translate
+    events:
+      - httpApi:
+          path: /translate/{id}
+          method: GET
+          documentation:
+            summary: Get translation
+            description: Gets the translation of a given endpoint
+            pathParams:
+              - name: id
+                description: The ID provided by the addTranslation endpoint
+                schema:
+                  type: string
+                  pattern: "^[-a-f0-9]+$"
+            methodResponses:
+              - statusCode: 200
+                responseBody:
+                  description: Response of SW-API translated into Spanish
+                responseModels:
+                  application/json: GetDocumentResponse
+              - statusCode: 404
+                responseBody:
+                  description: A not found error message
+                responseModels:
+                  application/json: ErrorResponse
+              - statusCode: 400
+                responseBody:
+                  description: An error message when translating an endpoint
+                responseModels:
+                  application/json: ErrorResponse
+
+resources:
+  Resources:
+    Translation:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: SW_Translation
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+
+custom:
+  documentation:
+    models:
+      - name: ErrorResponse
+        description: This is an error
+        contentType: application/json
+        schema:
+          type: "object"
+          properties:
+            status:
+              type: "number"
+            message:
+              type: "string"
+
+      - name: PutDocumentRequest
+        description: PUT document request model
+        contentType: application/json
+        schema:
+          type: "object"
+          properties:
+            endpoint:
+              type: "string"
+
+      - name: PutDocumentResponse
+        description: PUT document response model
+        contentType: application/json
+        schema:
+          type: "object"
+          properties:
+            status:
+              type: "number"
+            body:
+              type: "object"
+
+      - name: GetDocumentResponse
+        description: GET document response model
+        contentType: application/json
+        schema:
+          type: "object"
+          properties:
+            status:
+              type: "number"
+            body:
+              type: "object"
