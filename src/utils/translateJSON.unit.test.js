@@ -1,14 +1,5 @@
 const { translate, translateSingleObject } = require('./translateJSON');
 
-const endpoints = [
-    'planets',
-    'planets/1',
-    'planets/2',
-    'people',
-    'people/1',
-    'people/2',
-];
-
 describe('translateJSON tests', () => {
     it('should be a function', () => {
         expect(typeof translate).toBe('function');

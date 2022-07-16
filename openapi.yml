@@ -31,5 +31,41 @@ components:
 info:
   title: ''
   description: ''
-  version: eef63428-aa7a-43de-8320-7de73e383fdb
-paths: {}
+  version: da1ffad1-d650-48a9-8a24-0f2ca89d163c
+paths:
+  //translate:
+    post:
+      operationId: addTranslation
+      summary: Add translation
+      description: Creates a translation for a given endpoint
+      responses:
+        '200':
+          description: The ID of the translation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PutDocumentResponse'
+  '//translate/{id}':
+    get:
+      operationId: getTranslation
+      summary: Get translation
+      description: Gets the translation of a given endpoint
+      responses:
+        '200':
+          description: Response of SW-API translated into Spanish
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDocumentResponse'
+        '400':
+          description: An error message when translating an endpoint
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: A not found error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
