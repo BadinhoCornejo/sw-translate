@@ -1,18 +1,10 @@
-const AWS = require('aws-sdk');
+const Dynamo = require('../common/dynamo');
 const translator = require('../utils/translateJSON');
 
 const translate = async (event) => {
     try {
         const { id } = event.pathParameters;
-        const dynamodb = new AWS.DynamoDB.DocumentClient();
-        const result = await dynamodb.get({
-            TableName: 'SW_Translation',
-            Key: { id }
-        }).promise()
-
-        const data = result.Item;
-
-        if (!data) return { status: 404,  message: 'Not Found' };
+        const data = await Dynamo.get(id, 'SW_Translation');
 
         const [translation, error] = await translator.translate(data.endpoint);
 
@@ -21,6 +13,7 @@ const translate = async (event) => {
         return { status: 200, body: { data: translation } };
     } catch (error) {
         console.error(error);
+        return { status: 400, message: JSON.stringify(error) };
     }
 };
 

@@ -1,23 +1,24 @@
 const { v4 } = require('uuid');
-const AWS = require('aws-sdk');
+const Dynamo = require('../common/dynamo');
 
 const translate = async (event) => {
-    const dynamodb = new AWS.DynamoDB.DocumentClient();
-    const { endpoint } = JSON.parse(event.body);
-    const createdAt = (new Date()).toISOString();
-    const id = v4();
-    const data = {
-        id,
-        endpoint,
-        createdAt
-    };
+    try {
+        const { endpoint } = JSON.parse(event.body);
+        const createdAt = (new Date()).toISOString();
+        const id = v4();
+        const data = {
+            id,
+            endpoint,
+            createdAt
+        };
 
-    await dynamodb.put({
-        TableName: 'SW_Translation',
-        Item: data,
-    }).promise();
+        await Dynamo.write(data, 'SW_Translation');
 
-    return { status: 200, body: { id } };
+        return { status: 200, body: { id } };
+    } catch (error) {
+        console.error(error);
+        return { status: 400, message: JSON.stringify(error) };
+    }
 };
 
 module.exports = {
