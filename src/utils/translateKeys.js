@@ -5,6 +5,8 @@ translator.engine = 'google';
 translator.key = API_KEY;
 
 const translateKeys = async (object) => {
+    if(typeof object !== 'object') return null;
+
     const keys = [];
 
     for (i in object) {
