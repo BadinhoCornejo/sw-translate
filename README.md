@@ -84,6 +84,16 @@ We want to translate each key of this JSON into Spanish, so the output would be 
 
 ## Usage
 
+### Environment Variables
+
+Create **.env** file on the root directory of the project and add your Google API Key.
+
+E.g.
+
+```
+GOOGLE_API_KEY={YOUR_KEY}
+```
+
 ### Testing
 
 Clone this project in your local machine. Make sure to have git installed.

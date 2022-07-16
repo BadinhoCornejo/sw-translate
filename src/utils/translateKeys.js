@@ -1,5 +1,5 @@
 const translator = require('translate');
-const API_KEY = 'AIzaSyAvFPO0xnHshYQy_mra-LBEb4x7R7VSKRc';
+const API_KEY = process.env.GOOGLE_API_KEY;
 
 translator.engine = 'google';
 translator.key = API_KEY;
